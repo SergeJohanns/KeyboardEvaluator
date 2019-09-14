@@ -13,4 +13,4 @@ I also looked at the 3000 most common words in the English language. 175 of thes
 Simply download and run the script, giving up the name of a text file in the same directory to check. Note that the script assumes the text file to be all-lowercase and free of duplicates.
 
 ## Credit
-Testing was done with the all-alpha word list from the open source list of English words found over at [this](https://github.com/dwyl/english-words) great project, as well as with [this](https://www.ef.edu/english-resources/english-vocabulary/top-3000-words/) list of the most common words in the English language, provided by Education First.
+Testing was done with the all-alpha word list from the open source list of English words found over at [english-words](https://github.com/dwyl/english-words), as well as with the list [3000 most common words in English](https://www.ef.edu/english-resources/english-vocabulary/top-3000-words/), provided by Education First.
