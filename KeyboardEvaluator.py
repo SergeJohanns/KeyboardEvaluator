@@ -114,9 +114,9 @@ def HomeRowTest(resultList):
 print("\nSingle row test:")
 singleRowResults = SingleRowTest(result)
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on one row, which is {}% of all tested words.".format(keyboardList[i].name, singleRowResults[i], round(singleRowResults[i]/len(wordList), 5)))
+    print("Keyboard {} can type {} words on one row, which is {}% of all tested words.".format(keyboardList[i].name, singleRowResults[i], round(100*singleRowResults[i]/len(wordList), 5)))
 
 print("\nHome row test:")
 homeRowResults = HomeRowTest(result)
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on the home row, which is {}% of all tested words.".format(keyboardList[i].name, homeRowResults[i], round(homeRowResults[i]/len(wordList), 5)))
+    print("Keyboard {} can type {} words on the home row, which is {}% of all tested words.".format(keyboardList[i].name, homeRowResults[i], round(100*homeRowResults[i]/len(wordList), 5)))
