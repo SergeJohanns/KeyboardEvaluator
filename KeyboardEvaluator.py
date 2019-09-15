@@ -118,5 +118,5 @@ for i in range(len(keyboardList)):
 print("\nAll row overview:")
 for i in range(len(keyboardList)):
     for j in range(len(keyboardList[i].keyboard)):
-        print("Keyboard {} can type {} words on row {}, which is {}% of all tested words.".format(keyboardList[i].name, rowCountResults[i][j], j, round(100*rowCountResults[i][j]/len(wordList), 5)))
+        print("Keyboard {} can type {} words on row {}, which is {}% of all tested words and {}% of all words that {} can type on one line.".format(keyboardList[i].name, rowCountResults[i][j], j, round(100*rowCountResults[i][j]/len(wordList), 5), round(100*rowCountResults[i][j]/allCountResults[i], 5), keyboardList[i].name))
     print("") #Print empty line
