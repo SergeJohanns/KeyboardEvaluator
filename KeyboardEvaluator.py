@@ -15,6 +15,15 @@ def PrintTime(taskString, timeIn):
     print("{} took {} milliseconds.".format(taskString, round(duration * 1000)))
     return time.time()
 
+def SumSubLists(listIn):
+    """Takes in a list of of lists of numbers and returns a list of the sums of those sublists"""
+    output = []
+    for i in range(len(listIn)):
+        output.append(0)
+        for j in range(len(listIn[i])):
+            output[i] += listIn[i][j]
+    return output
+
 #Initialise starting constructs
 charIgnoreSet = {'\n'}
 startTime = time.time()
@@ -73,11 +82,13 @@ for i in range(len(wordList)): #For every word
 startTime = PrintTime("Gathering row data", startTime)
 
 #Test functions
-def SingleRowTest(resultList):
-    """Returns a list of numbers representing the number of words that can be typed on a single row on the keyboard at that index of the output list"""
+def RowCountTest(resultList):
+    """Returns a list of lists representing the number of words that can be typed on each row on the keyboard at that index of the output list"""
     output = [] #Prepare the output list
     for i in range(len(keyboardList)): #For every keyboard
-        output.append(0) #Make an entry for that keyboard that starts at 0
+        output.append([]) #Make an entry for that keyboard
+        for j in range(len(keyboardList[i].keyboard)): #For every row on the keyboard
+            output[i].append(0) #Add a counter for that row
     for i in range(len(resultList)): #For every word in the result list
         for j in range(len(resultList[i][1])): #For every keyboard in the entry for that word
             """Test if everything is on the same row"""
@@ -89,34 +100,23 @@ def SingleRowTest(resultList):
                         same = False #Fail the test
                 """Increment by one if it is"""
                 if same: #If the test is passed
-                    output[resultList[i][1][j][0]] += 1 #Increment the count by one
-    return output #Return results
-
-def HomeRowTest(resultList):
-    """Returns a list of numbers representing the number of words that can be typed on a single row on the keyboard at that index of the output list"""
-    output = [] #Prepare the output list
-    for i in range(len(keyboardList)): #For every keyboard
-        output.append(0) #Make an entry for that keyboard that starts at 0
-    for i in range(len(resultList)): #For every word in the result list
-        for j in range(len(resultList[i][1])): #For every keyboard in the entry for that word
-            """Test if everything is on the same row"""
-            if len(resultList[i][1][j][1]) > 0: #If there are rows to check
-                home = True #If that one is -1 it means that the word cannot be typed on this keyboard and therefore the test should always fail
-                for k in range(len(resultList[i][1][j][1])): #For every entry in the row list
-                    if resultList[i][1][j][1][k] != keyboardList[resultList[i][1][j][0]].homeRow: #If it is not the home row of the current keyboard
-                        home = False #Fail the test
-                """Increment by one if it is"""
-                if home: #If the test is passed
-                    output[resultList[i][1][j][0]] += 1 #Increment the count by one
+                    output[resultList[i][1][j][0]][hold] += 1 #Increment the count of that row by one
     return output #Return results
 
 #Perform tests
+rowCountResults = RowCountTest(result)
+allCountResults = SumSubLists(rowCountResults)
+
 print("\nSingle row test:")
-singleRowResults = SingleRowTest(result)
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on one row, which is {}% of all tested words.".format(keyboardList[i].name, singleRowResults[i], round(100*singleRowResults[i]/len(wordList), 5)))
+    print("Keyboard {} can type {} words on one row, which is {}% of all tested words.".format(keyboardList[i].name, allCountResults[i], round(100*allCountResults[i]/len(wordList), 5)))
 
 print("\nHome row test:")
-homeRowResults = HomeRowTest(result)
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on the home row, which is {}% of all tested words.".format(keyboardList[i].name, homeRowResults[i], round(100*homeRowResults[i]/len(wordList), 5)))
+    print("Keyboard {} can type {} words on the home row, which is {}% of all tested words.".format(keyboardList[i].name, rowCountResults[i][keyboardList[i].homeRow], round(100*rowCountResults[i][keyboardList[i].homeRow]/len(wordList), 5)))
+
+print("\nAll row overview:")
+for i in range(len(keyboardList)):
+    for j in range(len(keyboardList[i].keyboard)):
+        print("Keyboard {} can type {} words on row {}, which is {}% of all tested words.".format(keyboardList[i].name, rowCountResults[i][j], j, round(100*rowCountResults[i][j]/len(wordList), 5)))
+    print("") #Print empty line
