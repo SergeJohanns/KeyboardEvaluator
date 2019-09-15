@@ -82,6 +82,20 @@ for i in range(len(wordList)): #For every word
 startTime = PrintTime("Gathering row data", startTime)
 
 #Test functions
+def CanTypeTest(resultList):
+    """Returns a list of numbers representing the number of words the keyboard with that index can type (words that it contains every key for)"""
+    output = [] #Prepare the output list
+    for i in range(len(keyboardList)): #For every keyboard
+        output.append(0) #Add a counter for that keyboard
+        for j in range(len(resultList)): #For every word
+            canType = True #Start by assuming the test is passed (the word can be typed)
+            for k in range(len(resultList[j][1][i][1])): #For every entry in the word list (for every character in the word)
+                if resultList[j][1][i][1][k] == -1: #If that row is -1 (if the character is not on any row of the keyboard)
+                    canType = False #Fail the test
+            if canType: #If the test is passed
+                output[i] += 1 #Increment the counter for the keyboard
+    return output #Return the result list
+
 def RowCountTest(resultList):
     """Returns a list of lists representing the number of words that can be typed on each row on the keyboard at that index of the output list"""
     output = [] #Prepare the output list
@@ -104,19 +118,25 @@ def RowCountTest(resultList):
     return output #Return results
 
 #Perform tests
+canTypeResults = CanTypeTest(result)
 rowCountResults = RowCountTest(result)
 allCountResults = SumSubLists(rowCountResults)
 
+print("\nCan type test:")
+print("Of the {} words in the file:".format(len(wordList)))
+for i in range(len(keyboardList)):
+    print("The {0} layout can type {1} ({2}%) words without missing any keys.".format(keyboardList[i].name, canTypeResults[i], round(100*canTypeResults[i]/len(wordList), 5)))
+
 print("\nSingle row test:")
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on one row, which is {}% of all tested words.".format(keyboardList[i].name, allCountResults[i], round(100*allCountResults[i]/len(wordList), 5)))
+    print("The {0} layout can type {1} words on one row, which is {2}% of all words {0} can type.".format(keyboardList[i].name, allCountResults[i], round(100*allCountResults[i]/canTypeResults[i], 5)))
 
 print("\nHome row test:")
 for i in range(len(keyboardList)):
-    print("Keyboard {} can type {} words on the home row, which is {}% of all tested words.".format(keyboardList[i].name, rowCountResults[i][keyboardList[i].homeRow], round(100*rowCountResults[i][keyboardList[i].homeRow]/len(wordList), 5)))
+    print("The {0} layout can type {1} words on the home row, which is {2}% of all words {0} can type.".format(keyboardList[i].name, rowCountResults[i][keyboardList[i].homeRow], round(100*rowCountResults[i][keyboardList[i].homeRow]/canTypeResults[i], 5)))
 
 print("\nAll row overview:")
 for i in range(len(keyboardList)):
     for j in range(len(keyboardList[i].keyboard)):
-        print("Keyboard {} can type {} words on row {}, which is {}% of all tested words and {}% of all words that {} can type on one line.".format(keyboardList[i].name, rowCountResults[i][j], j, round(100*rowCountResults[i][j]/len(wordList), 5), round(100*rowCountResults[i][j]/allCountResults[i], 5), keyboardList[i].name))
+        print("Keyboard {0} can type {1} words on row {2}, which is {3}% of all words {0} can type and {4}% of all words that {0} can type on one line.".format(keyboardList[i].name, rowCountResults[i][j], j, round(100*rowCountResults[i][j]/canTypeResults[i], 5), round(100*rowCountResults[i][j]/allCountResults[i], 5)))
     print("") #Print empty line
